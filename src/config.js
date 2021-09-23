@@ -5,7 +5,7 @@ export const createWalletConfig = {
   maxPasswordLength: 36
 };
 
-export const serverUrl = 'http://localhost:5000';
+export const serverUrl = 'https://api.colorblockart.com';
 
 export const cookiesKey = 'colorful';
 

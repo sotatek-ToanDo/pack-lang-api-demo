@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Pact from 'pact-lang-api';
@@ -37,7 +37,7 @@ export const SendPage = (props) => {
 
   const clickTransfer = () => {
     console.log(txData);
-    const { sender, receiver, senderChainId, receiverChainId, amount } = txData;
+    const { sender, receiver, senderChainId, amount } = txData;
     const cmd = {
       keyPairs: {
         publicKey: wallet.real.publicKey,

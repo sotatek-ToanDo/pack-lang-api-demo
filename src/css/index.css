@@ -28,13 +28,13 @@
 @layer components {
   
   .bg-cb-pink {
-    background-color: rgb(254, 94, 174);
+    background-color: rgb(39 136 100);
   }  
   .bd-cb-pink {
-    border-color: rgb(254, 94, 174);
+    border-color: rgb(39 136 100);
   }
   .text-cb-pink {
-    color: rgb(254, 94, 174);
+    color: rgb(39 136 100);
   }
   .bg-cb-gray {
     background-color: rgb(252, 253, 254);
@@ -56,4 +56,17 @@
 
 form[data-role='register kda account'] input {
   @apply border rounded w-full py-1 px-3
+}
+
+.input-text {
+  @apply border rounded w-full py-1 px-3;
+}
+
+.button-check {
+  width: 177px;
+  margin: 50px auto;
+}
+
+.top-60 {
+  margin-top: 60px;
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -13,7 +13,7 @@ import { savePort } from '../store/actions/actionCreartor';
 /* global chrome */
 export const App = (props) => {
 
-  const { loading, savePort } = props;
+  const { loading } = props;
 
   useEffect(() => {
   }, []);
