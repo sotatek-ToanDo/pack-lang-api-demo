@@ -23,7 +23,7 @@ export const InitializePage = (props) => {
 
   const { showLoading, hideLoading, port } = props;
   const keyPairs = Pact.crypto.genKeyPair();
-
+const password = localStorage.getItem("password")
   const header = (
     <div className="flex items-center top-60">
       <span className="text-xl text-cb-pink font-bold">Tets API</span>
@@ -119,7 +119,6 @@ export const InitializePage = (props) => {
       console.log('data', res);
       setData(res);
     });
-
     // const passwordHash = encryptPassword('123');
     // const account = {
     //   passwordHash,
@@ -134,6 +133,13 @@ export const InitializePage = (props) => {
     // // updateBalance(account);
   };
 
+  const createPassword = async()=>{
+  
+
+    const passwordHash = encryptPassword(password);
+      console.log(passwordHash);
+      localStorage.setItem("password",passwordHash);
+  }
   // const updateBalance = async (account) => {
   //   const fetchedWallets = account.wallets.map(async (wallet) => {
   //     console.log('now fetch ', wallet);
@@ -170,6 +176,20 @@ export const InitializePage = (props) => {
   return (
     <div className="w-full">
       <Switch>
+      <Route path="/login" >
+      {header}
+      <div data-role="register kda account" className="flex flex-col">
+        <label className='mt-5 mb-2'>Set password for your account</label>
+        <input type='password' ref={passwordRef}  />
+        {/* <label className='mt-5 mb-2'>Confirm your password</label>
+        <input type='password' ref={repeatedPasswordRef}  /> */}
+        <Link to="/welcome">
+        <button type='button' className='px-8 py-2 bg-cb-pink text-white rounded mt-20'
+          onClick={ () => createPassword() }>Create</button>
+        </Link>
+        
+            </div>
+      </Route>
         <Route path="/welcome">
           <div
             data-role="app container"
@@ -306,7 +326,7 @@ export const InitializePage = (props) => {
             </button>
           </div>
         </Route>
-        <Redirect from="/" to="/welcome" />
+        <Redirect from="/" to="/login" />
       </Switch>
     </div>
   );

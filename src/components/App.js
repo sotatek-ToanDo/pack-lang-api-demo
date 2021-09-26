@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import  { useState } from 'react';
 import { HashRouter as Router, Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -14,10 +15,17 @@ import { savePort } from '../store/actions/actionCreartor';
 export const App = (props) => {
 
   const { loading } = props;
-
+ const [token, setToken] = useState();
+//  if(!token) {
+//   return <InitializePage setToken={setToken} />
+// }
   useEffect(() => {
   }, []);
+ 
 
+ 
+
+  
   return (
     <div data-role='app-container' className='w-2/3 mx-auto relative'>
       <Router>
@@ -48,7 +56,7 @@ export const App = (props) => {
           </Router>
         </Route>
         <Redirect from='/' to='/initialize' />
-      </Router>
+    </Router>
     </div>
   );
 };
