@@ -9,6 +9,7 @@ import Pact from 'pact-lang-api';
 import { createWalletConfig, serverUrl } from '../../config';
 import { showLoading, hideLoading } from '../../store/actions/actionCreartor';
 import { encryptPassword } from '../../utils/security';
+import SendPage from '../pages/SendPage';
 import * as types from '../../store/actions/actionTypes';
 import { fetchCustomLocal } from '../../utils/chainweb';
 import { mkReq } from '../../utils/tools';
@@ -19,7 +20,7 @@ export const InitializePage = (props) => {
   const secretKeyRef = useRef();
   const passwordRef = useRef();
   const repeatedPasswordRef = useRef();
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
 
   const { showLoading, hideLoading, port } = props;
   const keyPairs = Pact.crypto.genKeyPair();
@@ -193,16 +194,14 @@ export const InitializePage = (props) => {
               Please select from the options below
             </p>
             <div className="flex h-80">
-              <div className="w-1/2 h-full px-5">
+              <div className="w-1/3 h-full px-5">
                 <div className="h-full border rounded flex flex-col items-center pt-10">
                   <img
                     src="/img/search.svg"
                     className="w-16 h-16"
                     alt="download"
                   />
-                  <p className="text-lg mt-5">
-                    Check balance of the wallet
-                  </p>
+                  <p className="text-lg mt-5">Check balance of the wallet</p>
                   <p className="text-xs my-2 text-gray-500">
                     Type private key and address
                   </p>
@@ -213,7 +212,25 @@ export const InitializePage = (props) => {
                   </Link>
                 </div>
               </div>
-              <div className="w-1/2 h-full px-5">
+              <div className="w-1/3 h-full px-5">
+                <div className="h-full border rounded flex flex-col items-center pt-10">
+                  <img
+                    src="/img/transfer.svg"
+                    className="w-16 h-16"
+                    alt="download"
+                  />
+                  <p className="text-lg mt-5">Transfer activity</p>
+                  <p className="text-xs my-2 text-gray-500">
+                    Type the sender and receive to send coin
+                  </p>
+                  <Link to="/send">
+                    <button className="px-8 py-2 bg-cb-pink text-white rounded mt-10">
+                      Transfer
+                    </button>
+                  </Link>
+                </div>
+              </div>
+              <div className="w-1/3 h-full px-5">
                 <div className="h-full border rounded flex flex-col items-center pt-10">
                   <img
                     src="/img/add.png"
@@ -233,6 +250,9 @@ export const InitializePage = (props) => {
               </div>
             </div>
           </div>
+        </Route>
+        <Route path="/send">
+          <SendPage />
         </Route>
         <Route path="/create-wallet">
           {header}
@@ -267,7 +287,7 @@ export const InitializePage = (props) => {
                   Generate
                 </button>
               )}
-              <Link to="/select-action" className="button-check">
+              <Link to="/finish" className="button-check">
                 <button className="px-8 py-2 bg-cb-pink text-white rounded">
                   Done
                 </button>

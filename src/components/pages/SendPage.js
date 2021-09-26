@@ -8,13 +8,19 @@ import { getTimestamp } from '../../utils/tools';
 import { hideLoading, showLoading } from '../../store/actions/actionCreartor';
 import { toast } from 'react-toastify';
 
+const getApiHost = (chainId) => {
+  return `https://api.chainweb.com/chainweb/0.0/${networkId}/chain/${chainId}/pact`;
+}
+
 export const SendPage = (props) => {
 
-  const { wallet, showLoading, hideLoading } = props;
+  const { showLoading, hideLoading } = props;
   const [txData, setTxData] = useState({
-    sender: wallet.address,
+    sender: '',
     senderChainId: '0',
     receiverChainId: '0',
+    privateKey: '',
+    receiver: '',
   });
 
   const chainIds = Array(chainsCount).fill(0).map((_, i) => `${i}`);
@@ -26,7 +32,7 @@ export const SendPage = (props) => {
       meta: Pact.lang.mkMeta('', '', gasPrice, gasLimit, 0, ttl),
       networkId
     };
-    await Pact.fetch.local(cmd, apiHost).then(data => {
+    await Pact.fetch.local(cmd, getApiHost(txData.receiverChainId)).then(data => {
       const result = data.result;
       if (result.status !== 'success') {
         toast.warning('Receiver is not existing');
@@ -35,13 +41,29 @@ export const SendPage = (props) => {
     setTxData({...txData, receiver});
   };
 
+  const changeSender = async (sender) => {
+    const cmd = {
+      pactCode: `(coin.get-balance "${sender}")`,
+      envData: {},
+      meta: Pact.lang.mkMeta('', '', gasPrice, gasLimit, 0, ttl),
+      networkId
+    };
+    await Pact.fetch.local(cmd, getApiHost(txData.senderChainId)).then(data => {
+      const result = data.result;
+      if (result.status !== 'success') {
+        toast.warning('Sender is not existing');
+      }
+    });
+    setTxData({...txData, sender});
+  };
+
   const clickTransfer = () => {
-    console.log(txData);
-    const { sender, receiver, senderChainId, amount } = txData;
+    const publicKey = Pact.crypto.restoreKeyPairFromSecretKey(txData.privateKey).publicKey;
+    const { sender, receiver, senderChainId, amount, privateKey } = txData;
     const cmd = {
       keyPairs: {
-        publicKey: wallet.real.publicKey,
-        secretKey: wallet.real.secretKey,
+        publicKey,
+        secretKey: privateKey,
         clist: [
           Pact.lang.mkCap('gas', 'pay gas', 'coin.GAS')['cap'],
           Pact.lang.mkCap('transfer', 'transfer coin', 'coin.TRANSFER', [sender, receiver, amount])['cap']
@@ -73,7 +95,7 @@ export const SendPage = (props) => {
     <div className='w-full flex flex-col items-center'>
       <label className='text-lg font-bold mt-10 mb-2'>Sender</label>
       <div className='w-full flex items-center justify-center h-12'>
-        <input type='text' className='w-1/2 h-full border px-2' value={wallet.address} readOnly />
+        <input type='text' className='w-1/2 h-full border px-2' onChange={ (e) => changeSender(e.target.value) } />
         <select className='w-1/4 h-full border' onChange={ (e) => setTxData({...txData, senderChainId: chainIds[e.target.selectedIndex]}) }>
           { chainIds.map(chainId => (
               <option>
@@ -99,7 +121,11 @@ export const SendPage = (props) => {
       <div className='w-full flex items-center justify-center h-12'>
         <input type='number' className='w-3/4 h-full border' onChange={ (e) => setTxData({...txData, amount: parseFloat(e.target.value)}) } />
       </div>
-      <button className='w-36 flex items-center justify-center h-12' onClick={ () => clickTransfer() }>
+      <label className='text-lg font-bold mt-10 mb-2'>Private Key</label>
+      <div className='w-full flex items-center justify-center h-12'>
+        <input type='text' className='w-3/4 h-full border' onChange={ (e) => setTxData({...txData, privateKey: e.target.value}) } />
+      </div>
+      <button className='px-8 py-2 bg-cb-pink text-white rounded mt-10' onClick={ () => clickTransfer() }>
         Make Transfer
       </button>
     </div>
